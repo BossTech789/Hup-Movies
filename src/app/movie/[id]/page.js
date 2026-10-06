@@ -1,10 +1,16 @@
 import Image from "next/image";
+import Link from "next/link";
+import { notFound } from "next/navigation";
 import { getMovie } from "@/lib/tmdb";
 
 export default async function MovieDetails({ params }) {
     const { id } = await params;
 
     const movie = await getMovie(id);
+
+    if (!movie) {
+        notFound();
+    }
 
     const trailer = movie.videos?.results?.find(
         (video) =>
@@ -14,6 +20,10 @@ export default async function MovieDetails({ params }) {
 
     return (
         <main className="movie-details">
+
+            {/* =========================
+                MOVIE HERO
+            ========================= */}
 
             <section className="movie-hero">
 
@@ -46,7 +56,10 @@ export default async function MovieDetails({ params }) {
                             <h1>{movie.title}</h1>
 
                             <p>
-                                ⭐ {movie.vote_average.toFixed(1)}
+                                ⭐{" "}
+                                {movie.vote_average
+                                    ? movie.vote_average.toFixed(1)
+                                    : "N/A"}
                             </p>
 
                             <p>
@@ -70,6 +83,10 @@ export default async function MovieDetails({ params }) {
             </section>
 
 
+            {/* =========================
+                CAST
+            ========================= */}
+
             <section className="movie-section">
 
                 <h2>Cast</h2>
@@ -79,31 +96,46 @@ export default async function MovieDetails({ params }) {
                     {movie.credits?.cast
                         ?.slice(0, 10)
                         .map((actor) => (
-                            <div
+
+                            <Link
+                                href={`/person/${actor.id}`}
                                 className="cast-card"
                                 key={actor.id}
                             >
-                                {actor.profile_path && (
+
+                                {actor.profile_path ? (
                                     <Image
                                         src={`https://image.tmdb.org/t/p/w185${actor.profile_path}`}
                                         alt={actor.name}
                                         width={120}
                                         height={180}
                                     />
+                                ) : (
+                                    <div className="no-poster">
+                                        No Image
+                                    </div>
                                 )}
 
-                                <h3>{actor.name}</h3>
+                                <h3>
+                                    {actor.name}
+                                </h3>
 
                                 <p>
                                     {actor.character}
                                 </p>
-                            </div>
+
+                            </Link>
+
                         ))}
 
                 </div>
 
             </section>
 
+
+            {/* =========================
+                TRAILER
+            ========================= */}
 
             {trailer && (
                 <section className="movie-section">

@@ -31,6 +31,20 @@ export async function getMovie(id) {
     return data;
 }
 
+export async function getTV(id) {
+    const response = await fetch(
+        `${BASE_URL}/tv/${id}?api_key=${API_KEY}&append_to_response=credits,videos,similar`
+    );
+
+    const data = await response.json();
+
+    if (!response.ok) {
+        return null;
+    }
+
+    return data;
+}
+
 export async function searchMovies(query) {
     const response = await fetch(
         `${BASE_URL}/search/multi?api_key=${API_KEY}&query=${encodeURIComponent(query)}&page=1`
@@ -38,6 +52,34 @@ export async function searchMovies(query) {
 
     if (!response.ok) {
         throw new Error("Failed to search TMDB");
+    }
+
+    return response.json();
+}
+
+export async function getPersonCredits(id) {
+    const response = await fetch(
+        `${BASE_URL}/person/${id}/combined_credits?api_key=${API_KEY}`
+    );
+
+    if (!response.ok) {
+        return null;
+    }
+
+    return response.json();
+}
+
+/* =========================================
+   PERSON / ACTOR
+========================================= */
+
+export async function getPerson(id) {
+    const response = await fetch(
+        `${BASE_URL}/person/${id}?api_key=${API_KEY}`
+    );
+
+    if (!response.ok) {
+        return null;
     }
 
     return response.json();
