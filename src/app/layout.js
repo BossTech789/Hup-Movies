@@ -6,8 +6,8 @@ import ThemeToggle from "./components/ThemeToggle";
 import SearchBar from "./components/SearchBar";
 
 export const metadata = {
-    title: "Jonathan | Movie Explorer",
-    description: "Explore movies and TV shows",
+  title: "Hup Movies",
+  description: "Discover movies and TV shows",
 };
 
 export default function RootLayout({ children }) {
